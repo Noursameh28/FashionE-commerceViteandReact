@@ -1,0 +1,11 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "email": "admin@fashion.com",
+            "password": "$2a$10$X78p.H4lI.v/v.t/v.t/v.t/v.t/v.t/v.t/v.t/v.t/v.t/v.t/v.",
+            "name": "Admin",
+            "role": "admin"
+        }
+    ]
+}
