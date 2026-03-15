@@ -15,8 +15,8 @@ const ProductDetails = () => {
         const mockProducts = [
             { id: '1', title: 'Neon Cyber Jacket', price: 299, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1000&q=80', description: 'Experience the ultimate cyberpunk aesthetic with our Neon Cyber Jacket. Featuring glow-in-the-dark piping, lightweight weather-resistant fabric, and multiple utility pockets. Perfect for night explorers and city dwellers alike.' },
             { id: '2', title: 'Fluorescent Sneakers', price: 159, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&q=80', description: 'Step into the light with these vibrant fluorescent sneakers. Engineered for comfort and style, they feature a glow-sole technology and high-performance breathable mesh.' },
-            { id: '3', title: 'Electric Blue Hoodie', price: 89, image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=1000&q=80', description: 'Soft, bold, and electric. This oversized hoodie is made from premium organic cotton and features a striking electric blue hue that wont fade.' },
-            { id: '4', title: 'Luminous Cargo Pants', price: 129, image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=1000&q=80', description: 'Reflective cargo pants designed for the urban environment. Durable, stylish, and highly visible in low light conditions thanks to integrated reflective strips.' },
+            { id: '3', title: 'Electric Blue Hoodie', price: 89, image: '/images/electric_blue_hoodie_1773573370903.png', description: 'Soft, bold, and electric. This oversized hoodie is made from premium organic cotton and features a striking electric blue hue that wont fade.' },
+            { id: '4', title: 'Luminous Cargo Pants', price: 129, image: '/images/reflective_cargo_pants_1773573386883.png', description: 'Reflective cargo pants designed for the urban environment. Durable, stylish, and highly visible in low light conditions thanks to integrated reflective strips.' },
         ];
 
         const found = mockProducts.find(p => p.id === id);
@@ -31,7 +31,7 @@ const ProductDetails = () => {
         <div className="product-details-page container">
             <Link to="/" className="back-link"><ArrowLeft size={18} /> Back to Shop</Link>
 
-            <div className="product-details-grid">
+            <div className="product-details-grid fade-in-up">
                 <div className="product-gallery">
                     <div className="main-img card">
                         <img src={product.image} alt={product.title} />
