@@ -3,12 +3,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Star, Tag, Zap } from 'lucide-react';
 import { client } from '../api/sanity';
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import PromotionBanner from '../components/PromotionBanner';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [bestSellers, setBestSellers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentSlide, setCurrentSlide] = useState(0);
     const navigate = useNavigate();
+
+    const heroImages = [
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop", // Main Shopping
+        "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop", // Fashion Model
+        "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2070&auto=format&fit=crop", // Clothing Rack
+        "https://images.unsplash.com/photo-1445205170230-053b830c6050?q=80&w=2070&auto=format&fit=crop"  // Accessories
+    ];
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [heroImages.length]);
 
     useEffect(() => {
         // In a real scenario, we'd fetch from Sanity
@@ -41,12 +57,22 @@ const Home = () => {
     const [featRef, featVisible]     = useScrollAnimation();
     const [offerRef, offerVisible]   = useScrollAnimation();
     const [bestRef, bestVisible]     = useScrollAnimation();
+    const [promoBannerRef, promoBannerVisible] = useScrollAnimation();
     const [promoRef, promoVisible]   = useScrollAnimation();
 
     return (
         <div className="home-page">
             {/* Hero Section */}
             <section className="hero">
+                <div className="hero-slider">
+                    {heroImages.map((img, idx) => (
+                        <div 
+                            key={idx} 
+                            className={`hero-slide ${idx === currentSlide ? 'active' : ''}`}
+                            style={{ backgroundImage: `url(${img})` }}
+                        />
+                    ))}
+                </div>
                 <div className="container hero-content">
                     <span className="hero-tag">New Collection 2026</span>
                     <h1>FUTURE OF <span className="highlight">FASHION</span> IS NEON</h1>
@@ -56,35 +82,47 @@ const Home = () => {
                         <Link to="/about" className="btn-outline">Our Story</Link>
                     </div>
                 </div>
+
+                <div className="slider-dots">
+                    {heroImages.map((_, idx) => (
+                        <button 
+                            key={idx} 
+                            className={`dot ${idx === currentSlide ? 'active' : ''}`}
+                            onClick={() => setCurrentSlide(idx)}
+                        />
+                    ))}
+                </div>
                 <div className="hero-overlay"></div>
             </section>
             
             {/* Categories Section */}
-            <section ref={catRef} className={`categories-section container reveal${catVisible ? ' visible' : ''}`}>
-                <div className="section-header">
-                    <h2>Shop by Category</h2>
-                    <p>Find exactly what you need for the grid.</p>
-                </div>
-                <div className="categories-grid">
-                    <div className="category-card card" onClick={() => handleCategoryClick('Apparel')}>
-                        <img src="https://images.unsplash.com/photo-1544441893-675973e31985?w=600&q=80" alt="Apparel" />
-                        <div className="category-overlay">
-                            <h3>APPAREL</h3>
-                            <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
-                        </div>
+            <section ref={catRef} className={`categories-section reveal${catVisible ? ' visible' : ''}`}>
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Shop by Category</h2>
+                        <p>Find exactly what you need for the grid.</p>
                     </div>
-                    <div className="category-card card" onClick={() => handleCategoryClick('Footwear')}>
-                        <img src="/images/led_sneakers_1773573400806.png" alt="Footwear" />
-                        <div className="category-overlay">
-                            <h3>FOOTWEAR</h3>
-                            <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
+                    <div className="categories-grid">
+                        <div className="category-card card" onClick={() => handleCategoryClick('Apparel')}>
+                            <img src="https://images.unsplash.com/photo-1544441893-675973e31985?w=600&q=80" alt="Apparel" />
+                            <div className="category-overlay">
+                                <h3>APPAREL</h3>
+                                <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="category-card card" onClick={() => handleCategoryClick('Accessories')}>
-                        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&q=80" alt="Accessories" />
-                        <div className="category-overlay">
-                            <h3>ACCESSORIES</h3>
-                            <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
+                        <div className="category-card card" onClick={() => handleCategoryClick('Footwear')}>
+                            <img src="/images/led_sneakers_1773573400806.png" alt="Footwear" />
+                            <div className="category-overlay">
+                                <h3>FOOTWEAR</h3>
+                                <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
+                            </div>
+                        </div>
+                        <div className="category-card card" onClick={() => handleCategoryClick('Accessories')}>
+                            <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&q=80" alt="Accessories" />
+                            <div className="category-overlay">
+                                <h3>ACCESSORIES</h3>
+                                <button className="btn-outline-small">Explore <ArrowRight size={14} /></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,35 +130,37 @@ const Home = () => {
 
 
             {/* Featured Products */}
-            <section ref={featRef} id="products" className={`products-section container reveal${featVisible ? ' visible' : ''}`}>
-                <div className="section-header">
-                    <h2>Featured Collection</h2>
-                    <p>Our most popular pieces right now.</p>
-                </div>
+            <section ref={featRef} id="products" className={`products-section reveal${featVisible ? ' visible' : ''}`}>
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Featured Collection</h2>
+                        <p>Our most popular pieces right now.</p>
+                    </div>
 
-                <div className="product-grid">
-                    {products.map(product => (
-                        <div key={product.id} className="product-card card">
-                            <div className="product-img">
-                                <img src={product.image} alt={product.title} />
-                                <button className="add-quick-btn">Quick Add</button>
-                            </div>
-                            <div className="product-info">
-                                <div className="product-meta">
-                                    <span className="product-cat">Featured</span>
-                                    <div className="rating"><Star size={14} fill="#42f20d" color="#42f20d" /> 4.9</div>
+                    <div className="product-grid">
+                        {products.map(product => (
+                            <div key={product.id} className="product-card card">
+                                <div className="product-img">
+                                    <img src={product.image} alt={product.title} />
+                                    <button className="add-quick-btn">Quick Add</button>
                                 </div>
-                                <h3>{product.title}</h3>
-                                <div className="product-footer">
-                                    <span className="price">${product.price}</span>
-                                    <Link to={`/product/${product.id}`} className="view-link">View Details</Link>
+                                <div className="product-info">
+                                    <div className="product-meta">
+                                        <span className="product-cat">Featured</span>
+                                        <div className="rating"><Star size={14} fill="#42f20d" color="#42f20d" /> 4.9</div>
+                                    </div>
+                                    <h3>{product.title}</h3>
+                                    <div className="product-footer">
+                                        <span className="price">${product.price}</span>
+                                        <Link to={`/product/${product.id}`} className="view-link">View Details</Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-                <div className="view-all-container">
-                    <Link to="/shop" className="btn-outline">View All Gear</Link>
+                        ))}
+                    </div>
+                    <div className="view-all-container">
+                        <Link to="/shop" className="btn-outline">View All Gear</Link>
+                    </div>
                 </div>
             </section>
             
@@ -147,34 +187,41 @@ const Home = () => {
             </section>
             
             {/* Best Sellers */}
-            <section ref={bestRef} className={`products-section container reveal${bestVisible ? ' visible' : ''}`}>
-                <div className="section-header">
-                    <h2>Best Sellers</h2>
-                    <p>Highly rated by the rebellion.</p>
-                </div>
+            <section ref={bestRef} className={`products-section reveal${bestVisible ? ' visible' : ''}`}>
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Best Sellers</h2>
+                        <p>Highly rated by the rebellion.</p>
+                    </div>
 
-                <div className="product-grid">
-                    {bestSellers.map(product => (
-                        <div key={product.id} className="product-card card">
-                            <div className="product-img">
-                                <img src={product.image} alt={product.title} />
-                                <button className="add-quick-btn">Quick Add</button>
-                            </div>
-                            <div className="product-info">
-                                <div className="product-meta">
-                                    <span className="product-cat">Top Rated</span>
-                                    <div className="rating"><Star size={14} fill="#42f20d" color="#42f20d" /> 4.8</div>
+                    <div className="product-grid">
+                        {bestSellers.map(product => (
+                            <div key={product.id} className="product-card card">
+                                <div className="product-img">
+                                    <img src={product.image} alt={product.title} />
+                                    <button className="add-quick-btn">Quick Add</button>
                                 </div>
-                                <h3>{product.title}</h3>
-                                <div className="product-footer">
-                                    <span className="price">${product.price}</span>
-                                    <Link to={`/product/${product.id}`} className="view-link">View Details</Link>
+                                <div className="product-info">
+                                    <div className="product-meta">
+                                        <span className="product-cat">Top Rated</span>
+                                        <div className="rating"><Star size={14} fill="#42f20d" color="#42f20d" /> 4.8</div>
+                                    </div>
+                                    <h3>{product.title}</h3>
+                                    <div className="product-footer">
+                                        <span className="price">${product.price}</span>
+                                        <Link to={`/product/${product.id}`} className="view-link">View Details</Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </section>
+
+            <PromotionBanner 
+                ref={promoBannerRef} 
+                revealClass={`reveal${promoBannerVisible ? ' visible' : ''}`} 
+            />
 
             {/* Promo / Newsletter Section */}
             <section ref={promoRef} className={`promo-banner container reveal${promoVisible ? ' visible' : ''}`}>
